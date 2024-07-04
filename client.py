@@ -3,9 +3,7 @@ import json
 import time
 import random
 
-# RabbitMQ configuration
-rabbitmq_host = 'localhost'
-rabbitmq_queue = 'mqtt_queue'
+from apps import settings
 
 
 # MQTT message generation
@@ -15,19 +13,19 @@ def generate_mqtt_message():
 
 def main():
     # Connect to RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.RABBITMQ_HOST))
     channel = connection.channel()
+    print("connection---------------->", connection)
+    print("channel------------------->", channel)
 
     # Declare a queue
-    channel.queue_declare(queue=rabbitmq_queue)
+    channel.queue_declare(queue=settings.RABBITMQ_QUEUE_NAME)
 
     try:
         while True:
             message = generate_mqtt_message()
-            channel.basic_publish(exchange='',
-                                  routing_key=rabbitmq_queue,
-                                  body=message)
-            print(f"Sent: {message}")
+            channel.basic_publish(exchange='', routing_key=settings.RABBITMQ_QUEUE_NAME, body=message)
+            print(f"Msg Sent: {message}")
             time.sleep(1)
     except KeyboardInterrupt:
         print("Client stopped.")
