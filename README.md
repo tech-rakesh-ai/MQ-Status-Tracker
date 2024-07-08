@@ -24,6 +24,7 @@ and return the count of each status during the specified time range.
 
 - Install Python (version 3.8 or higher).
 - Install MongoDB.
+- Install RabbitMq.
 
 ### Clone the Repository
 
